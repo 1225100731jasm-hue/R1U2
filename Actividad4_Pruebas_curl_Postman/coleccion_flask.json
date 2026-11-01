@@ -1,0 +1,526 @@
+{
+  "info": {
+    "name": "Inventario Flask",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Categorías",
+      "item": [
+        {
+          "name": "1 Crear categoría",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/categorias",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Cat {{$timestamp}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Categoría creada (201)\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.environment.set(\"cat_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2 Listar categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/categorias"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Devuelve una lista\", () => {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3 Ver categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/categorias/{{cat_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Tiene nombre\", () => {",
+                  "    pm.expect(pm.response.json()).to.have.property(\"nombre\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "4 Actualizar categoría",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/categorias/{{cat_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Editada {{$timestamp}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Categoría actualizada (200)\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "5 Crear producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Switch\",\"precio\":850.5,\"stock\":10,\"categoria_id\":{{cat_id}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Producto creado (201)\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.environment.set(\"prod_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6 Ver producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/productos/{{prod_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Tiene nombre y precio\", () => {",
+                  "    pm.expect(pm.response.json()).to.have.property(\"nombre\");",
+                  "    pm.expect(pm.response.json()).to.have.property(\"precio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "7 Actualizar producto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/productos/{{prod_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Switch 24p\",\"precio\":900,\"stock\":10,\"categoria_id\":{{cat_id}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Producto actualizado (200)\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Consultas",
+      "item": [
+        {
+          "name": "8 Paginación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/productos?page=1&per_page=5"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trae los metadatos de paginación\", () => {",
+                  "    const r = pm.response.json();",
+                  "    pm.expect(r).to.have.property(\"page\");",
+                  "    pm.expect(r).to.have.property(\"per_page\");",
+                  "    pm.expect(r).to.have.property(\"total\");",
+                  "    pm.expect(r).to.have.property(\"total_pages\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "9 Filtro por categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/productos?categoria={{cat_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"El filtro devuelve productos\", () => {",
+                  "    pm.expect(pm.response.json().total).to.be.at.least(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Orden por precio descendente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/productos?sort=-precio"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Viene ordenado de mayor a menor precio\", () => {",
+                  "    const precios = pm.response.json().datos.map(p => p.precio);",
+                  "    const ordenados = [...precios].sort((a, b) => b - a);",
+                  "    pm.expect(precios).to.eql(ordenados);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Regla de negocio",
+      "item": [
+        {
+          "name": "11 Salida exitosa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/productos/{{prod_id}}/salidas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"cantidad\":3}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Salida registrada (201)\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Quedan 7 en stock\", () => {",
+                  "    pm.expect(pm.response.json().stock_restante).to.eql(7);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Salida mayor al stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/productos/{{prod_id}}/salidas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"cantidad\":999}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Conflicto de stock (409)\", () => {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Error con formato uniforme\", () => {",
+                  "    pm.expect(pm.response.json().error).to.have.property(\"codigo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Errores",
+      "item": [
+        {
+          "name": "13 JSON mal formado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{mal",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"JSON mal formado devuelve 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 No encontrado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/productos/999999"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Producto inexistente devuelve 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Dato inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"X\",\"precio\":-5,\"stock\":1,\"categoria_id\":{{cat_id}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Precio negativo devuelve 422\", () => {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test(\"El detalle explica el error\", () => {",
+                  "    pm.expect(pm.response.json().error.detalle.length).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Método no permitido",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/categorias"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Método no permitido (405)\", () => {",
+                  "    pm.response.to.have.status(405);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Borrar categoría con productos",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/categorias/{{cat_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Categoría con productos devuelve 409\", () => {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

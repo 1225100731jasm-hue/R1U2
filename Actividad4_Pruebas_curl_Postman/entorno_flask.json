@@ -1,0 +1,24 @@
+{
+  "name": "local",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "cat_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "prod_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
